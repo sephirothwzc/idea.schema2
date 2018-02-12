@@ -34,14 +34,14 @@ def generate(table, dir) {
 def generate(out, className, fields ,tablename) {
     out.println "'use strict'"
     out.println ""
-    // i18n映射
+    // i18n映射 ml
     out.println "/**\n" +
             " * @Author: 吴占超\n" +
             " * @Description: JSON\n" +
             " * @Date: Create in \n" +
             " * @Modified By:\n" +
             " */"
-    out.println "$className = {"
+    out.println "ml$className = {"
     out.println "/* ml界面 */"
     out.println "error_selone: '请选择一条记录',"
     out.println "msg_saved: '保存成功',"
@@ -59,10 +59,6 @@ def generate(out, className, fields ,tablename) {
     out.println "btnquery: '查询',"
     out.println "btnreset: '重置',"
 
-    out.println "/* ei界面 */"
-    out.println "btnsave: '保存',"
-    out.println "btncancel: '取消',"
-
     out.println "/* fields */"
     def s = 0
     fields.each() {
@@ -72,8 +68,29 @@ def generate(out, className, fields ,tablename) {
     }
     out.println "}"
     out.println ""
+    // i18n映射 ei
+    out.println "/**\n" +
+            " * @Author: 吴占超\n" +
+            " * @Description: JSON\n" +
+            " * @Date: Create in \n" +
+            " * @Modified By:\n" +
+            " */"
+    out.println "ei$className = {"
+    out.println "/* ei界面 */"
+    out.println "btnsave: '保存',"
+    out.println "btncancel: '取消',"
+
+    out.println "/* fields */"
+    s = 0
+    fields.each() {
+        s = s+1
+        def str = (s == fields.size() )? "$it.name : '$it.comment'" : "$it.name : '$it.comment',"
+        out.println str
+    }
+    out.println "}"
+    out.println ""
     out.println "columns = {"
-    def sc = 0
+    sc = 0
     fields.each() {
         def str = """{
     field: '$it.name',
@@ -89,6 +106,7 @@ def generate(out, className, fields ,tablename) {
     }
     out.println "}"
     out.println ""
+
     // 生成 mock 列表管理
     out.println "    // #region $className"
     out.println "    ms.mock('/$className/manager', function (params) {"
