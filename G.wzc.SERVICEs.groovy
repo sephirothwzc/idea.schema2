@@ -10,9 +10,10 @@ import com.intellij.database.util.DasUtil
  *   FILES       files helper
  */
 // 包名更换
-packageName = "com.sephiroth.jpademo.jpadao;"
-beforName = "Jpa"
+packageName = "com.sephiroth.jpademo.service;"
+beforName = "Service"
 entityName = "Entity"
+jpaName = "Jpa"
 typeMapping = [
         (~/(?i)int/)                      : "long",
         (~/(?i)float|double|decimal|real/): "double",
@@ -39,17 +40,29 @@ def generate(out, className, fields ,tablename) {
     // 引用映射
     out.println "import com.sephiroth.jpademo.entity.$entityName$className;"
     out.println "import com.sephiroth.jpademo.base.BaseJpaRepository;"
+    out.println "import com.sephiroth.jpademo.base.BaseService;"
+    out.println "import com.sephiroth.jpademo.jpadao.$jpaName$className;"
+    out.println "import org.springframework.beans.factory.annotation.Autowired;"
+    out.println "import org.springframework.stereotype.Service;"
     out.println ""
     // jpa映射end
     out.println "/**\n" +
             " * @Author: 吴占超\n" +
-            " * @Description: JPA DAO\n" +
+            " * @Description: Service \n" +
             " * @Date: Create in \n" +
             " * @Modified By:\n" +
             " */"
-    out.println "public interface $beforName$className  extends\n" +
-            "    BaseJpaRepository<$entityName$className,String> {"
+    out.println "@Service"
+    out.println "public class $beforName$className  extends\n" +
+            "    BaseService<$entityName$className> {"
     out.println ""
+    out.println "    @Autowired"
+    out.println "    private $jpaName$className jpa$className;"
+    out.println ""
+    out.println "    @Override"
+    out.println "    public BaseJpaRepository getBaseJpaRepository() {"
+    out.println "        return jpa$className;"
+    out.println "    }"
     out.println ""
     out.println "}"
 }

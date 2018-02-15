@@ -53,6 +53,7 @@ def generate(out, className, fields ,tablename) {
     // 列映射
     // 主键映射
     if (it.name == "id" && it.type == "String") {
+      out.println "@Id"
       out.println """  @GenericGenerator(name = "user-uuid", strategy = "uuid")
   @GeneratedValue(generator = "user-uuid")
   @Column(name = "id", nullable = false, length = 64)"""
@@ -65,6 +66,8 @@ def generate(out, className, fields ,tablename) {
       out.println "  @Column(name = \"$it.colname\")"
     }
     out.println "  private ${it.type} ${it.name};"
+    out.println ""
+    out.println "  public static final String  _${it.name} = \"${it.name}\";"
   }
   out.println ""
 //  fields.each() {
