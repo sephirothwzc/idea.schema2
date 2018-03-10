@@ -2,6 +2,7 @@ import com.intellij.database.model.DasTable
 import com.intellij.database.model.ObjectKind
 import com.intellij.database.util.Case
 import com.intellij.database.util.DasUtil
+import sun.java2d.pipe.OutlineTextRenderer
 
 /*
  * Available context bindings:
@@ -10,8 +11,8 @@ import com.intellij.database.util.DasUtil
  *   FILES       files helper
  */
 // 包名更换
-packageName = "com.sephiroth.jpademo.entity;"
-beforName = "Entity"
+packageName = "com.sephiroth.jpademo.model"
+beforName = "InManager"
 typeMapping = [
   (~/(?i)int/)                      : "long",
   (~/(?i)float|double|decimal|real/): "double",
@@ -32,58 +33,36 @@ def generate(table, dir) {
 }
 
 def generate(out, className, fields ,tablename) {
-  out.println "package $packageName"
+  out.println "package $packageName.$className;"
   out.println ""
   out.println ""
   // 引用映射
+  out.println "import com.sephiroth.jpademo.base.jpa.BasePagination;"
+  out.println "import com.sephiroth.jpademo.retention.RetentionPagination;"
   out.println "import lombok.Data;"
-  out.println "import org.hibernate.annotations.GenericGenerator;"
+  out.println "import org.hibernate.validator.constraints.NotEmpty;"
   out.println ""
-  out.println "import javax.persistence.*;"
-  out.println "import java.io.Serializable;"
-  // jpa映射
-  out.println "@Entity"
-  out.println "@Table(name = \"$tablename\")"
   out.println "@Data"
-  // jpa映射end
-  out.println "public class $beforName$className  implements Serializable {"
+  out.println "public class $beforName$className  extends BasePagination {"
   out.println ""
   fields.each() {
-    if (it.annos != "") out.println "  ${it.annos}"
-    // 列映射
-    // 主键映射
-    if (it.name == "id" && it.type == "String") {
-      out.println "  @Id"
-      out.println """  @GenericGenerator(name = "user-uuid", strategy = "uuid")
-  @GeneratedValue(generator = "user-uuid")
-  @Column(name = "id", nullable = false, length = 64)"""
+    if(it.type == "java.sql.Timestamp"||
+            it.type == "java.sql.Date"||
+            it.type == "java.sql.Time") {
+      out.println "  @RetentionPagination(scpeEnum = RetentionPagination.ScpeEnum.gteq)"
+      out.println "  private ${it.type} ${it.name};"
+      out.println ""
+      out.println "  @RetentionPagination(scpeEnum = RetentionPagination.ScpeEnum.lteq)"
+      out.println "  private ${it.type} ${it.name}1;"
+      out.println ""
+
+    }else {
+      out.println "  @RetentionPagination"
+      out.println "  private ${it.type} ${it.name};"
+      out.println ""
     }
-    else if(it.name == "id") {
-      out.println """  @GeneratedValue
-  @Column(name = \"$it.colname\")"""
-    }
-    else {
-      out.println "  @Column(name = \"$it.colname\")"
-    }
-    out.println "  private ${it.type} ${it.name};"
-    out.println ""
-  }
-  fields.each() {
-    out.println "  public static final String  _${it.name} = \"${it.name}\";"
-    out.println ""
   }
   out.println ""
-//  fields.each() {
-//    out.println ""
-//    out.println "  public ${it.type} get${it.name.capitalize()}() {"
-//    out.println "    return ${it.name};"
-//    out.println "  }"
-//    out.println ""
-//    out.println "  public void set${it.name.capitalize()}(${it.type} ${it.name}) {"
-//    out.println "    this.${it.name} = ${it.name};"
-//    out.println "  }"
-//    out.println ""
-//  }
   out.println "}"
 }
 

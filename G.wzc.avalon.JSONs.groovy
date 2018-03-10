@@ -58,7 +58,7 @@ def generate(out, className, fields ,tablename) {
     out.println "    look: '查看',"
     out.println "    btnquery: '查询',"
     out.println "    btnreset: '重置',"
-
+    out.println "    to: '至',"
     out.println "    /* fields */"
     def s = 0
     fields.each() {
