@@ -50,15 +50,15 @@ def generate(out, className, fields ,tablename) {
             it.type == "java.sql.Date"||
             it.type == "java.sql.Time") {
       out.println "  @RetentionPagination(scpeEnum = RetentionPagination.ScpeEnum.gteq)"
-      out.println "  private ${it.type} ${it.name};"
+      out.println "  public ${it.type} ${it.name};"
       out.println ""
       out.println "  @RetentionPagination(scpeEnum = RetentionPagination.ScpeEnum.lteq)"
-      out.println "  private ${it.type} ${it.name}1;"
+      out.println "  public ${it.type} ${it.name}1;"
       out.println ""
 
     }else {
       out.println "  @RetentionPagination"
-      out.println "  private ${it.type} ${it.name};"
+      out.println "  public ${it.type} ${it.name};"
       out.println ""
     }
   }

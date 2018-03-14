@@ -48,10 +48,10 @@ def generate(out, className, fields ,tablename) {
     out.println "    exportall: '导出格式(所有)',"
     out.println "    exportnew: '导出格式(本页)',"
     out.println "    exportsel: '导出格式(选中)',"
-    out.println "    vmname: '页面描述，自己修改',"
-    out.println "    ai_title: '新增页面描述，自己修改',"
-    out.println "    ei_title: '编辑页面描述，自己修改',"
-    out.println "    di_title: '查看页面描述，自己修改',"
+    out.println "    vmname: 'xxx页面描述',"
+    out.println "    ai_title: 'xxx新增',"
+    out.println "    ei_title: 'xxx编辑',"
+    out.println "    di_title: 'xxx查看',"
     out.println "    add: '新增',"
     out.println "    upd: '修改',"
     out.println "    del: '删除',"
@@ -80,7 +80,7 @@ def generate(out, className, fields ,tablename) {
     out.println "    btnsave: '保存',"
     out.println "    btncancel: '取消',"
     out.println "    savescuess: '保存成功！'"
-
+    out.println "    rules_required: '请输入',"
     out.println "    /* fields */"
     s = 0
     fields.each() {
@@ -114,23 +114,26 @@ def generate(out, className, fields ,tablename) {
     out.println "        var fields = JSON.parse(params.body);"
     out.println "        var dttime = '/Date('+new Date().getTime()+')/';"
     out.println "        return ms.mock({"
-    out.println "            'total': 100,"
+    out.println "    state: 'Success',"
+    out.println "    data: {"
+    out.println "            total: 100,"
     out.println "            'rows|10': [{"
     out.println "                            'id|+1': 1, //主键guid"
     sc = 0
     fields.each() {
         if (it.name != 'id') {
-            def cmt = "'"+it.comment+"'"
+            def cmt = it.comment
             if(it.type == "java.sql.Timestamp" || it.type == "java.sql.Date" || it.type == "java.sql.Time") {
                 cmt = "dttime"
             }
-        def str = "                            '$it.name': fields.$it.name != undefined && fields.$it.name != '' ? fields.$it.name : $cmt"
+        def str = "                            $it.name: fields.$it.name != undefined && fields.$it.name != '' ? fields.$it.name : $cmt"
             sc = sc+1
             def dh = (sc == fields.size() )? "" : ","
             out.println str + dh + " // $it.comment"
         }
     }
     out.println "                        }]"
+    out.println "               }"
     out.println "        });"
     out.println "    });"
     out.println "    // #endregion $className"
@@ -139,11 +142,11 @@ def generate(out, className, fields ,tablename) {
     out.println "    ms.mock('$className/item', function (params) {"
     out.println "        var fields = params.body;"
     out.println "        return ms.mock({"
-    out.println "            'state': 1,"
-    out.println "            'data': {"
+    out.println "            state: 'Success',"
+    out.println "            data: {"
     sc = 0
     fields.each() {
-        def str = "                            '$it.name': '$it.comment'"
+        def str = "                            $it.name: '$it.comment'"
         sc = sc+1
         def dh = (sc == fields.size() )? "" : ","
         out.println str + dh + " // $it.comment"
@@ -157,11 +160,11 @@ def generate(out, className, fields ,tablename) {
     out.println "    ms.mock('$className/save', function (params) {"
     out.println "        var fields = params.body;"
     out.println "        return ms.mock({"
-    out.println "            'state': 1,"
-    out.println "            'data': {"
+    out.println "            state: 'Success',"
+    out.println "            data: {"
     sc = 0
     fields.each() {
-        def str = "                            '$it.name': '$it.comment'"
+        def str = "                            $it.name: '$it.comment'"
         sc = sc+1
         def dh = (sc == fields.size() )? "" : ","
         out.println str + dh + " // $it.comment"
@@ -176,8 +179,8 @@ def generate(out, className, fields ,tablename) {
     out.println "    ms.mock('$className/del', function (params) {"
     out.println "        var fields = params.body;"
     out.println "        return ms.mock({"
-    out.println "            'state': 1,"
-    out.println "            'data': '删除成功'"
+    out.println "            state: 'Success',"
+    out.println "            data: '删除成功'"
     out.println "        });"
     out.println "    });"
     out.println "    // #endregion $className del"

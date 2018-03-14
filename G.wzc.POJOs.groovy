@@ -73,17 +73,6 @@ def generate(out, className, fields ,tablename) {
     out.println ""
   }
   out.println ""
-//  fields.each() {
-//    out.println ""
-//    out.println "  public ${it.type} get${it.name.capitalize()}() {"
-//    out.println "    return ${it.name};"
-//    out.println "  }"
-//    out.println ""
-//    out.println "  public void set${it.name.capitalize()}(${it.type} ${it.name}) {"
-//    out.println "    this.${it.name} = ${it.name};"
-//    out.println "  }"
-//    out.println ""
-//  }
   out.println "}"
 }
 
